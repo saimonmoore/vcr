@@ -94,3 +94,4 @@ task :release => [:require_ruby_18, :prep_relish_release, :relish]
 # For gem-test: http://gem-testers.org/
 task :test => :spec
 
+load './lib/vcr/tasks/vcr.rake'
