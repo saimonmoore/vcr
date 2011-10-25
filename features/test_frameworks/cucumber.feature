@@ -67,7 +67,7 @@ Feature: Usage with Cucumber
     And a file named "features/vcr_example.feature" with:
       """
       Feature: VCR example
-
+      
         @localhost_request
         Scenario: tagged scenario
           When a request is made to "http://localhost:7777/localhost_request_1"
@@ -76,13 +76,13 @@ Feature: Usage with Cucumber
           Then the response should be "Hello nested_cassette"
           When a request is made to "http://localhost:7777/localhost_request_2"
           Then the response should be "Hello localhost_request_2"
-
+      
         @disallowed_1
         Scenario: tagged scenario
           When a request is made to "http://localhost:7777/allowed" within a cassette named "allowed"
           Then the response should be "Hello allowed"
           When a request is made to "http://localhost:7777/disallowed_1"
-
+      
         @disallowed_2
         Scenario: tagged scenario
           When a request is made to "http://localhost:7777/disallowed_2"
