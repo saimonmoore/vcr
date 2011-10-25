@@ -44,8 +44,14 @@ module VCR
 
       def load_yaml(cassette)
         ::YAML.load_file(cassette)
-      rescue ArgumentError
+      rescue *yaml_load_errors
         return nil
+      end
+
+      def yaml_load_errors
+        [ArgumentError].tap do |errors|
+          errors << Psych::SyntaxError if defined?(Psych::SyntaxError)
+        end
       end
 
       def relative_casssette_name(cassette)

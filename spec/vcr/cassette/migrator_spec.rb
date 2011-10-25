@@ -139,13 +139,28 @@ EOF
     output.should match(/Ignored example.yml since it could not be parsed as YAML/)
   end
 
-  it 'ignores files that cannot be parsed as valid YAML (such as ERB cassettes)' do
-    modified_contents = original_contents.gsub(/\A---/, "---\n<% 3.times do %>")
-    modified_contents = modified_contents.gsub(/\z/, "<% end %>")
-    File.open(file_name, 'w') { |f| f.write(modified_contents) }
-    subject.migrate!
-    File.read(file_name).should eq(modified_contents)
-    output.should match(/Ignored example.yml since it could not be parsed as YAML/)
+  shared_examples_for "ignoring invalid YAML" do
+    it 'ignores files that cannot be parsed as valid YAML (such as ERB cassettes)' do
+      modified_contents = original_contents.gsub(/\A---/, "---\n<% 3.times do %>")
+      modified_contents = modified_contents.gsub(/\z/, "<% end %>")
+      File.open(file_name, 'w') { |f| f.write(modified_contents) }
+      subject.migrate!
+      File.read(file_name).should eq(modified_contents)
+      output.should match(/Ignored example.yml since it could not be parsed as YAML/)
+    end
+  end
+
+  context 'with syck' do
+    it_behaves_like "ignoring invalid YAML"
+  end
+
+  context 'with psych' do
+    before(:each) do
+      pending "psych not available" unless defined?(YAML::ENGINE)
+      YAML::ENGINE.yamler = 'psych'
+    end
+
+    it_behaves_like "ignoring invalid YAML"
   end
 end
 
