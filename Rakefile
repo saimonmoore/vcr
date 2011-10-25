@@ -101,6 +101,7 @@ desc "Migrate cucumber cassettes"
 task :migrate_cucumber_cassettes do
   require 'vcr/cassette/migrator'
   Dir["features/**/*.feature"].each do |feature_file|
+    puts " - Migrating #{feature_file}"
     contents = File.read(feature_file)
     # http://rubular.com/r/gjzkoaYX2O
     contents.scan(/:\n^\s+"""\n([\s\S]+?)"""/).each do |captures|
@@ -117,6 +118,7 @@ task :migrate_cucumber_cassettes do
       end
 
       new_yml.gsub!(/^/, indentation)
+      new_yml << indentation
       contents.gsub!(capture, new_yml)
     end
 
